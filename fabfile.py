@@ -9,6 +9,9 @@ def up():
     for worker in workers:
         local("buildbot-worker start %s" % worker)
 
+def reconfig():
+    local("buildbot reconfig master")
+
 def down():
     local("buildbot-worker stop worker")
     for worker in workers:
