@@ -93,4 +93,4 @@ ENV/
 *.log
 *.pid
 master/gitpoller*
-env
+env.sh
