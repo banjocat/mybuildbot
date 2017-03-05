@@ -1,20 +1,18 @@
-from fabric.api import local, with_settings
+from fabric.api import local, env
 
 workers = [
         'worker',
         ]
 
-try:
-    with open('./env.sh') as f:
-        environment = f.read()
-except IOError:
-    raise SystemExit("Must create env.sh first")
+env.shell = '/bin/bash'
 
-@with_settings(prefix=environment)
+def env():
+    local('. ./env.sh && env')
+
 def up():
-    local("buildbot start master", shell='/bin/bash')
+    local(". ./env.sh && buildbot start master", shell='/bin/bash')
     for worker in workers:
-        local("buildbot-worker start %s" % worker, shell='/bin/bash')
+        local(". ./env.sh && buildbot-worker start %s" % worker, shell='/bin/bash')
 
 def reconfig():
     local("buildbot reconfig master")
@@ -26,4 +24,9 @@ def down():
 
 def log():
     local("tail -f ./master/twistd.log")
+
+def restart():
+    down()
+    up()
+
 
